@@ -11,4 +11,4 @@ import csv
 with open('dos_datos.csv') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
-        print (', '.join(row))
+        print(row['x'])
