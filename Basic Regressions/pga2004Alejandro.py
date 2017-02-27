@@ -8,6 +8,7 @@
 import tensorflow as tf
 import csv
 import numpy
+import matplotlib.pyplot as plt
 
 rng = numpy.random
 def num(s):
