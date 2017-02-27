@@ -4,7 +4,7 @@ a = tf.constant(5)
 b = tf.constant(4)
 
 suma = tf.add(a,b)
-mul = tf.matmul(a,b)
+mult = tf.multiply(a,b)
 
-print (mul)
+print (mult)
 print (suma)
