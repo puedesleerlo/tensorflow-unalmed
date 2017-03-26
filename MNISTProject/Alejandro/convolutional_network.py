@@ -126,7 +126,7 @@ with tf.Session() as sess:
                   "{:.5f}".format(acc))
         step += 1
     print("Optimization Finished!")
-
+    print(sess.run(weights))
     # Calculate accuracy for 256 mnist test images
     print("Testing Accuracy:", \
         sess.run(accuracy, feed_dict={x: mnist.test.images[:256],
