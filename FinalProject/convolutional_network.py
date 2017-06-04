@@ -10,8 +10,10 @@ Project: https://github.com/aymericdamien/TensorFlow-Examples/
 from __future__ import print_function
 
 import tensorflow as tf
+from input_data import read_data_sets 
 
-
+TRAIN_PATH = 'dataset/train'
+images = read_data_sets(TRAIN_PATH)
 # 0: Mano Derecha
 # 1: Manos a los lados
 # 2: Manos abajo
@@ -19,24 +21,24 @@ import tensorflow as tf
 import glob
 import numpy as np
 from tqdm import tqdm
-def extractLabels(path):
-    return path[14:15]
+# def extractLabels(path):
+#     return path[14:15]
 
-def getFiles(path):
-    files = glob.glob('{}/**/*.txt*'.format(path))
-    images = []
-    labels = []
-    for f in tqdm(files):
-        try:
-            content = map(lambda x: x/255, np.loadtxt(f))
-            images.append(content)
-            labels.append(extractLabels(f))
-            # image = np.array(midi_manipulation.midiToNoteStateMatrix(f))
-            # if np.array(song).shape[0] > 50:
-                # songs.append(song)
-        except Exception as e:
-            raise e           
-    return [images, labels]
+# def getFiles(path):
+#     files = glob.glob('{}/**/*.txt*'.format(path))
+#     images = []
+#     labels = []
+#     for f in tqdm(files):
+#         try:
+#             content = np.array(map(lambda x: x/255, np.loadtxt(f)))
+#             images.append(content)
+#             labels.append(extractLabels(f))
+#             # image = np.array(midi_manipulation.midiToNoteStateMatrix(f))
+#             # if np.array(song).shape[0] > 50:
+#                 # songs.append(song)
+#         except Exception as e:
+#             raise e           
+#     return [images, labels]
 
 # Parameters
 learning_rate = 0.001
@@ -50,11 +52,11 @@ n_classes = 3 # MNIST total classes (0-9 digits)
 dropout = 0.75 # Dropout, probability to keep units
 
 # tf Graph input
-# x = tf.placeholder(tf.float32, [None, n_input])
-# y = tf.placeholder(tf.float32, [None, n_classes])
+x = tf.placeholder(tf.float32, [None, n_input])
+y = tf.placeholder(tf.float32, [None, n_classes])
 keep_prob = tf.placeholder(tf.float32) #dropout (keep probability)
-
-x, y = tf.train.batch(getFiles('dataset/train'), batch_size=batch_size, enqueue_many=True, capacity=6)
+# info = getFiles('dataset/train')
+# images, labels = tf.train.batch(, batch_size=batch_size, enqueue_many=True, capacity=6)
 # Create some wrappers for simplicity
 def conv2d(x, W, b, strides=1):
     # Conv2D wrapper, with bias and relu activation
