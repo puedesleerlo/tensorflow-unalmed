@@ -72,9 +72,9 @@ def maxpool2d(x, k=2):
 # Create model
 def conv_net(x, weights, biases, dropout):
     # Reshape input picture
-    print(x)
+    
     x = tf.reshape(x, shape=[-1, 640, 480, 1])
-
+    print(x)
     # Convolution Layer
     conv1 = conv2d(x, weights['wc1'], biases['bc1'])
     # Max Pooling (down-sampling)
