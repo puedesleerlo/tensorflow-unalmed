@@ -42,7 +42,7 @@ from tqdm import tqdm
 
 # Parameters
 learning_rate = 0.001
-training_iters = 20
+training_iters = 60
 batch_size = 20
 display_step = 1
 
