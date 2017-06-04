@@ -137,7 +137,7 @@ with tf.Session() as sess:
     # while step * batch_size < training_iters:
     while step * batch_size < training_iters:
         # batch_x, batch_y = mnist.train.next_batch(batch_size)
-        batch_x, = image_batches[step]
+        batch_x = image_batches[step]
         batch_y = label_batches[step]
         print(image_batches[step])
         # Run optimization op (backprop)
