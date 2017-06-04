@@ -50,11 +50,11 @@ n_classes = 3 # MNIST total classes (0-9 digits)
 dropout = 0.75 # Dropout, probability to keep units
 
 # tf Graph input
-x = tf.placeholder(tf.float32, [None, n_input])
-y = tf.placeholder(tf.float32, [None, n_classes])
+# x = tf.placeholder(tf.float32, [None, n_input])
+# y = tf.placeholder(tf.float32, [None, n_classes])
 keep_prob = tf.placeholder(tf.float32) #dropout (keep probability)
 
-image_batches, label_batches = tf.train.batch(getFiles('dataset/train'), batch_size=batch_size, enqueue_many=True, capacity=6)
+x, y = tf.train.batch(getFiles('dataset/train'), batch_size=batch_size, enqueue_many=True, capacity=6)
 # Create some wrappers for simplicity
 def conv2d(x, W, b, strides=1):
     # Conv2D wrapper, with bias and relu activation
@@ -72,7 +72,8 @@ def maxpool2d(x, k=2):
 # Create model
 def conv_net(x, weights, biases, dropout):
     # Reshape input picture
-    x = tf.reshape(x, shape=[-1, 28, 28, 1])
+    print(x)
+    x = tf.reshape(x, shape=[-1, 640, 480, 1])
 
     # Convolution Layer
     conv1 = conv2d(x, weights['wc1'], biases['bc1'])
@@ -137,16 +138,15 @@ with tf.Session() as sess:
     # while step * batch_size < training_iters:
     while step * batch_size < training_iters:
         # batch_x, batch_y = mnist.train.next_batch(batch_size)
-        batch_x = image_batches[step]
-        batch_y = label_batches[step]
-        print(image_batches[step])
+
         # Run optimization op (backprop)
-        sess.run(optimizer, feed_dict={x: batch_x, y: batch_y,
+        sess.run([x, y])
+        sess.run(optimizer, feed_dict={
                                        keep_prob: dropout})
         if step % display_step == 0:
             # Calculate batch loss and accuracy
-            loss, acc = sess.run([cost, accuracy], feed_dict={x: batch_x,
-                                                              y: batch_y,
+            sess.run([x, y])
+            loss, acc = sess.run([cost, accuracy], feed_dict={
                                                               keep_prob: 1.})
             print("Iter " + str(step*batch_size) + ", Minibatch Loss= " + \
                   "{:.6f}".format(loss) + ", Training Accuracy= " + \
