@@ -21,29 +21,11 @@ images = read_data_sets(TRAIN_PATH)
 import glob
 import numpy as np
 from tqdm import tqdm
-# def extractLabels(path):
-#     return path[14:15]
-
-# def getFiles(path):
-#     files = glob.glob('{}/**/*.txt*'.format(path))
-#     images = []
-#     labels = []
-#     for f in tqdm(files):
-#         try:
-#             content = np.array(map(lambda x: x/255, np.loadtxt(f)))
-#             images.append(content)
-#             labels.append(extractLabels(f))
-#             # image = np.array(midi_manipulation.midiToNoteStateMatrix(f))
-#             # if np.array(song).shape[0] > 50:
-#                 # songs.append(song)
-#         except Exception as e:
-#             raise e           
-#     return [images, labels]
 
 # Parameters
 learning_rate = 0.001
 training_iters = 60
-batch_size = 20
+batch_size = 5
 display_step = 1
 
 # Network Parameters
@@ -79,12 +61,12 @@ def conv_net(x, weights, biases, dropout):
     # Convolution Layer
     conv1 = conv2d(x, weights['wc1'], biases['bc1'])
     # Max Pooling (down-sampling)
-    conv1 = maxpool2d(conv1, k=2)
+    conv1 = maxpool2d(conv1, k=4)
 
     # Convolution Layer
     conv2 = conv2d(conv1, weights['wc2'], biases['bc2'])
     # Max Pooling (down-sampling)
-    conv2 = maxpool2d(conv2, k=20)
+    conv2 = maxpool2d(conv2, k=4)
 
     # Fully connected layer
     # Reshape conv2 output to fit fully connected layer input
@@ -105,7 +87,7 @@ weights = {
     # 5x5 conv, 32 inputs, 64 outputs
     'wc2': tf.Variable(tf.random_normal([5, 5, 32, 64])),
     # fully connected, 7*7*64 inputs, 1024 outputs
-    'wd1': tf.Variable(tf.random_normal([12*16*64, 1024])),
+    'wd1': tf.Variable(tf.random_normal([40*30*64, 1024])),
     # 1024 inputs, 10 outputs (class prediction)
     'out': tf.Variable(tf.random_normal([1024, n_classes]))
 }
