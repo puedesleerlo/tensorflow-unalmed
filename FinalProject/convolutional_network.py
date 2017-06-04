@@ -89,7 +89,6 @@ def conv_net(x, weights, biases, dropout):
 
     # Fully connected layer
     # Reshape conv2 output to fit fully connected layer input
-    print(conv2.get_shape())
     fc1 = tf.reshape(conv2, [-1, weights['wd1'].get_shape().as_list()[0]])
     fc1 = tf.add(tf.matmul(fc1, weights['wd1']), biases['bd1'])
     fc1 = tf.nn.relu(fc1)
@@ -107,7 +106,7 @@ weights = {
     # 5x5 conv, 32 inputs, 64 outputs
     'wc2': tf.Variable(tf.random_normal([5, 5, 32, 64])),
     # fully connected, 7*7*64 inputs, 1024 outputs
-    'wd1': tf.Variable(tf.random_normal([120*160*20*64, 1024])),
+    'wd1': tf.Variable(tf.random_normal([120*160*64, 1024])),
     # 1024 inputs, 10 outputs (class prediction)
     'out': tf.Variable(tf.random_normal([1024, n_classes]))
 }
@@ -140,16 +139,15 @@ with tf.Session() as sess:
     # Keep training until reach max iterations
     # while step * batch_size < training_iters:
     while step * batch_size < training_iters:
-        # batch_x, batch_y = mnist.train.next_batch(batch_size)
-
+        batch_x, batch_y = images.next_batch(batch_size)
+        print(batch_y)
         # Run optimization op (backprop)
-        sess.run([x, y])
-        sess.run(optimizer, feed_dict={
+        sess.run(optimizer, feed_dict={x: batch_x, y: batch_y,
                                        keep_prob: dropout})
         if step % display_step == 0:
             # Calculate batch loss and accuracy
             sess.run([x, y])
-            loss, acc = sess.run([cost, accuracy], feed_dict={
+            loss, acc = sess.run([cost, accuracy], feed_dict={x: batch_x, y: batch_y,
                                                               keep_prob: 1.})
             print("Iter " + str(step*batch_size) + ", Minibatch Loss= " + \
                   "{:.6f}".format(loss) + ", Training Accuracy= " + \

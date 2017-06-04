@@ -22,7 +22,6 @@ def getFiles(path):
             label = extractLabels(f)
             labels.append(label)
             images.append(image)
-            print(image.shape)
             # image = np.array(midi_manipulation.midiToNoteStateMatrix(f))
             # if np.array(song).shape[0] > 50:
                 # songs.append(song)
