@@ -42,7 +42,7 @@ from tqdm import tqdm
 
 # Parameters
 learning_rate = 0.001
-training_iters = 200000
+training_iters = 200
 batch_size = 20
 display_step = 10
 
@@ -149,10 +149,9 @@ with tf.Session() as sess:
         # Run optimization op (backprop)
         sess.run(optimizer, feed_dict={x: batch_x, y: batch_y,
                                        keep_prob: dropout})
-        print("hola7")
+        print(step)
         if step % display_step == 0:
             # Calculate batch loss and accuracy
-            sess.run([x, y])
             loss, acc = sess.run([cost, accuracy], feed_dict={x: batch_x, y: batch_y,
                                                               keep_prob: 1.})
             print("Iter " + str(step*batch_size) + ", Minibatch Loss= " + \
