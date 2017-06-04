@@ -85,7 +85,7 @@ def conv_net(x, weights, biases, dropout):
     # Convolution Layer
     conv2 = conv2d(conv1, weights['wc2'], biases['bc2'])
     # Max Pooling (down-sampling)
-    conv2 = maxpool2d(conv2, k=2)
+    conv2 = maxpool2d(conv2, k=20)
 
     # Fully connected layer
     # Reshape conv2 output to fit fully connected layer input
@@ -107,7 +107,7 @@ weights = {
     # 5x5 conv, 32 inputs, 64 outputs
     'wc2': tf.Variable(tf.random_normal([5, 5, 32, 64])),
     # fully connected, 7*7*64 inputs, 1024 outputs
-    'wd1': tf.Variable(tf.random_normal([120*160*64, 1024])),
+    'wd1': tf.Variable(tf.random_normal([12*16*64, 1024])),
     # 1024 inputs, 10 outputs (class prediction)
     'out': tf.Variable(tf.random_normal([1024, n_classes]))
 }
