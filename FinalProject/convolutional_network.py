@@ -87,6 +87,7 @@ def conv_net(x, weights, biases, dropout):
 
     # Fully connected layer
     # Reshape conv2 output to fit fully connected layer input
+    print(conv2.get_shape())
     fc1 = tf.reshape(conv2, [-1, weights['wd1'].get_shape().as_list()[0]])
     fc1 = tf.add(tf.matmul(fc1, weights['wd1']), biases['bd1'])
     fc1 = tf.nn.relu(fc1)
