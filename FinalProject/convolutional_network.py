@@ -48,7 +48,7 @@ display_step = 10
 
 # Network Parameters
 n_input = 307200
-n_classes = 3 # MNIST total classes (0-9 digits)
+n_classes = 4 # MNIST total classes (0-9 digits)
 dropout = 0.75 # Dropout, probability to keep units
 
 # tf Graph input
@@ -76,7 +76,7 @@ def conv_net(x, weights, biases, dropout):
     # Reshape input picture
     
     x = tf.reshape(x, shape=[-1, 640, 480, 1])
-    print(x)
+    print("hola")
     # Convolution Layer
     conv1 = conv2d(x, weights['wc1'], biases['bc1'])
     # Max Pooling (down-sampling)
@@ -92,6 +92,7 @@ def conv_net(x, weights, biases, dropout):
     fc1 = tf.reshape(conv2, [-1, weights['wd1'].get_shape().as_list()[0]])
     fc1 = tf.add(tf.matmul(fc1, weights['wd1']), biases['bd1'])
     fc1 = tf.nn.relu(fc1)
+    print("hola2")
     # Apply Dropout
     fc1 = tf.nn.dropout(fc1, dropout)
 
@@ -102,11 +103,11 @@ def conv_net(x, weights, biases, dropout):
 # Store layers weight & bias
 weights = {
     # 5x5 conv, 1 input, 32 outputs
-    'wc1': tf.Variable(tf.random_normal([5, 5, 1, 32])),
+    'wc1': tf.Variable(tf.random_normal([100, 75, 1, 32])),
     # 5x5 conv, 32 inputs, 64 outputs
-    'wc2': tf.Variable(tf.random_normal([5, 5, 32, 64])),
+    'wc2': tf.Variable(tf.random_normal([100, 75, 32, 64])),
     # fully connected, 7*7*64 inputs, 1024 outputs
-    'wd1': tf.Variable(tf.random_normal([120*160*64, 1024])),
+    'wd1': tf.Variable(tf.random_normal([12*16*64, 1024])),
     # 1024 inputs, 10 outputs (class prediction)
     'out': tf.Variable(tf.random_normal([1024, n_classes]))
 }
@@ -134,11 +135,14 @@ init = tf.global_variables_initializer()
 
 # Launch the graph
 with tf.Session() as sess:
+    print("hola3")
     sess.run(init)
+    print("hola5")
     step = 1
     # Keep training until reach max iterations
     # while step * batch_size < training_iters:
     while step * batch_size < training_iters:
+        print("hola4")
         batch_x, batch_y = images.next_batch(batch_size)
         print(batch_y)
         # Run optimization op (backprop)

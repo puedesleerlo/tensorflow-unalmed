@@ -9,9 +9,13 @@ from tensorflow.python.framework import dtypes
 TRAIN_PATH = 'dataset/train'
 
 def extractLabels(path):
-    return path[14:15]
+    number = 0
+    array = np.zeros((4))
+    number = int(path[14:15])
+    array[number] = 1
+    return array
 def extractImages(f):
-    return np.array(map(lambda x: x/255, np.loadtxt(f)))
+    return map(lambda x: x/255, np.loadtxt(f))
 def getFiles(path):
     files = glob.glob('{}/**/*.txt*'.format(path))
     images = []
@@ -27,24 +31,24 @@ def getFiles(path):
                 # songs.append(song)
         except Exception as e:
             raise e           
-    return [images, labels]
+    return [np.array(images).reshape(24, 307200), np.array(labels).reshape(24, 4)]
 
 
 
 def _read32(bytestream):
-  dt = numpy.dtype(numpy.uint32).newbyteorder('>')
-  return numpy.frombuffer(bytestream.read(4), dtype=dt)[0]
+  dt = np.dtype(np.uint32).newbyteorder('>')
+  return np.frombuffer(bytestream.read(4), dtype=dt)[0]
 
 
 # def extract_images(f):
-#       """Extract the images into a 4D uint8 numpy array [index, y, x, depth].
+#       """Extract the images into a 4D uint8 np array [index, y, x, depth].
 
 #   Args:
 #     f: A file object that can be passed into a gzip reader.
 
 #   Returns:
   
-#     data: A 4D uint8 numpy array [index, y, x, depth].
+#     data: A 4D uint8 np array [index, y, x, depth].
 
 #   Raises:
 #     ValueError: If the bytestream does not start with 2051.
@@ -60,18 +64,12 @@ def _read32(bytestream):
 #     rows = _read32(bytestream)
 #     cols = _read32(bytestream)
 #     buf = bytestream.read(rows * cols * num_images)
-#     data = numpy.frombuffer(buf, dtype=numpy.uint8)
+#     data = np.frombuffer(buf, dtype=np.uint8)
 #     data = data.reshape(num_images, rows, cols, 1)
 #     return data
 
 
-def dense_to_one_hot(labels_dense, num_classes):
-  """Convert class labels from scalars to one-hot vectors."""
-  num_labels = labels_dense.shape[0]
-  index_offset = numpy.arange(num_labels) * num_classes
-  labels_one_hot = numpy.zeros((num_labels, num_classes))
-  labels_one_hot.flat[index_offset + labels_dense.ravel()] = 1
-  return labels_one_hot
+
 
 
 # def extract_labels(f, one_hot=False, num_classes=10):
@@ -96,7 +94,7 @@ def dense_to_one_hot(labels_dense, num_classes):
 #                        (magic, f.name))
 #     num_items = _read32(bytestream)
 #     buf = bytestream.read(num_items)
-#     labels = numpy.frombuffer(buf, dtype=numpy.uint8)
+#     labels = np.frombuffer(buf, dtype=np.uint8)
 #     if one_hot:
 #       return dense_to_one_hot(labels, num_classes)
 #     return labels
@@ -124,7 +122,7 @@ class DataSet(object):
     self._labels = labels
     self._epochs_completed = 0
     self._index_in_epoch = 0
-
+    self._num_examples = images.shape[0]
   @property
   def images(self):
     return self._images
@@ -150,8 +148,8 @@ class DataSet(object):
       # Finished epoch
       self._epochs_completed += 1
       # Shuffle the data
-      perm = numpy.arange(self._num_examples)
-      numpy.random.shuffle(perm)
+      perm = np.arange(self._num_examples)
+      np.random.shuffle(perm)
       self._images = self._images[perm]
       self._labels = self._labels[perm]
       # Start next epoch
@@ -165,19 +163,16 @@ class DataSet(object):
 def read_data_sets(train_dir,
                    dtype=dtypes.float32,
                    reshape=True,
-                   validation_size=10):
+                   validation_size=0):
   train_images, train_labels = getFiles(train_dir)
-
   if not 0 <= validation_size <= len(train_images):
     raise ValueError(
         'Validation size should be between 0 and {}. Received: {}.'
         .format(len(train_images), validation_size))
-
 #   validation_images = train_images[:validation_size]
 #   validation_labels = train_labels[:validation_size]
   train_images = train_images[validation_size:]
   train_labels = train_labels[validation_size:]
-
   train = DataSet(train_images, train_labels, dtype=dtype, reshape=reshape)
 #   validation = DataSet(validation_images,
 #                        validation_labels,
@@ -185,4 +180,5 @@ def read_data_sets(train_dir,
 #                        reshape=reshape)
 #   test = DataSet(test_images, test_labels, dtype=dtype, reshape=reshape)
 
+  # return base.Datasets(train=train)
   return train
