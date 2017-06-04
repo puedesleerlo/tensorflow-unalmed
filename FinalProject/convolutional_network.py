@@ -103,11 +103,11 @@ def conv_net(x, weights, biases, dropout):
 # Store layers weight & bias
 weights = {
     # 5x5 conv, 1 input, 32 outputs
-    'wc1': tf.Variable(tf.random_normal([10, 10, 1, 32])),
+    'wc1': tf.Variable(tf.random_normal([5, 5, 1, 32])),
     # 5x5 conv, 32 inputs, 64 outputs
-    'wc2': tf.Variable(tf.random_normal([10, 10, 32, 64])),
+    'wc2': tf.Variable(tf.random_normal([5, 5, 32, 64])),
     # fully connected, 7*7*64 inputs, 1024 outputs
-    'wd1': tf.Variable(tf.random_normal([12*16*64, 1024])),
+    'wd1': tf.Variable(tf.random_normal([120*160*64, 1024])),
     # 1024 inputs, 10 outputs (class prediction)
     'out': tf.Variable(tf.random_normal([1024, n_classes]))
 }
@@ -121,7 +121,7 @@ biases = {
 
 # Construct model
 pred = conv_net(x, weights, biases, keep_prob)
-
+print(pred)
 # Define loss and optimizer
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=y))
 optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
@@ -143,11 +143,13 @@ with tf.Session() as sess:
     # while step * batch_size < training_iters:
     while step * batch_size < training_iters:
         print("hola4")
+
         batch_x, batch_y = images.next_batch(batch_size)
-        print(batch_y)
+        print("hola6")
         # Run optimization op (backprop)
         sess.run(optimizer, feed_dict={x: batch_x, y: batch_y,
                                        keep_prob: dropout})
+        print("hola7")
         if step % display_step == 0:
             # Calculate batch loss and accuracy
             sess.run([x, y])
