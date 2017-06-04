@@ -42,9 +42,9 @@ from tqdm import tqdm
 
 # Parameters
 learning_rate = 0.001
-training_iters = 200
+training_iters = 20
 batch_size = 20
-display_step = 10
+display_step = 1
 
 # Network Parameters
 n_input = 307200
@@ -76,7 +76,6 @@ def conv_net(x, weights, biases, dropout):
     # Reshape input picture
     
     x = tf.reshape(x, shape=[-1, 640, 480, 1])
-    print("hola")
     # Convolution Layer
     conv1 = conv2d(x, weights['wc1'], biases['bc1'])
     # Max Pooling (down-sampling)
@@ -92,7 +91,6 @@ def conv_net(x, weights, biases, dropout):
     fc1 = tf.reshape(conv2, [-1, weights['wd1'].get_shape().as_list()[0]])
     fc1 = tf.add(tf.matmul(fc1, weights['wd1']), biases['bd1'])
     fc1 = tf.nn.relu(fc1)
-    print("hola2")
     # Apply Dropout
     fc1 = tf.nn.dropout(fc1, dropout)
 
@@ -135,17 +133,13 @@ init = tf.global_variables_initializer()
 
 # Launch the graph
 with tf.Session() as sess:
-    print("hola3")
     sess.run(init)
-    print("hola5")
     step = 1
     # Keep training until reach max iterations
     # while step * batch_size < training_iters:
     while step * batch_size < training_iters:
-        print("hola4")
 
         batch_x, batch_y = images.next_batch(batch_size)
-        print("hola6")
         # Run optimization op (backprop)
         sess.run(optimizer, feed_dict={x: batch_x, y: batch_y,
                                        keep_prob: dropout})
@@ -160,8 +154,8 @@ with tf.Session() as sess:
         step += 1
     print("Optimization Finished!")
 
-    # Calculate accuracy for 256 mnist test images
-    print("Testing Accuracy:", \
-        sess.run(accuracy, feed_dict={x: mnist.test.images[:256],
-                                      y: mnist.test.labels[:256],
-                                      keep_prob: 1.}))
+    # # Calculate accuracy for 256 mnist test images
+    # print("Testing Accuracy:", \
+    #     sess.run(accuracy, feed_dict={x: mnist.test.images[:256],
+    #                                   y: mnist.test.labels[:256],
+    #                                   keep_prob: 1.}))
